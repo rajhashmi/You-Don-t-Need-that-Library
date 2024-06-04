@@ -8,10 +8,10 @@ export async function addToCart(id){
     if(result.length == 1){
         // already in cart update it
 
-        app.store.cart =   app.store.cart .map(
-            p=>  p.product.id== id
-            ?{...p, quantity: p.quantity+1}
-            :p
+        app.store.cart = app.store.cart.map(
+            p => p.product.id == id
+                 ? { ...p, quantity: p.quantity+1 }
+                 : p
         );
     }else{
         app.store.cart = [...app.store.cart,{product, quantity: 1}];

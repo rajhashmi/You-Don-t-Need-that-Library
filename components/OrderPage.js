@@ -1,5 +1,11 @@
 export class OrderPage extends HTMLElement {
 
+    #user = {
+        name: "",
+        phone: "",
+        email: ""
+    }
+
     constructor() {
         super();
     
@@ -23,7 +29,8 @@ export class OrderPage extends HTMLElement {
       this.render();
     }
   
-    render() {
+    render() {        
+
       let section = this.root.querySelector("section");   
       if (app.store.cart.length==0) {     
         section.innerHTML = `
@@ -54,8 +61,40 @@ export class OrderPage extends HTMLElement {
                   <p class='total'>Total</p>
                   <p class='price-total'>$${total.toFixed(2)}</p>
               </li>                
-          `;      
+          `;            
       }
+
+      this.setFormBindings(this.root.querySelector("form"));
+
+
+    }
+
+    setFormBindings(form) {
+        if (form) {
+            form.addEventListener("submit", event => {
+                event.preventDefault();
+                alert(`Thanks for your order ${this.#user.name}.`);
+                this.#user.name = "";
+                this.#user.email = "";
+                this.#user.phone = "";
+                // TODO Send the data to the server
+            })
+
+            // Set double data binding
+            this.#user = new Proxy(this.#user, {
+                set(target, property, value) {
+                    target[property] = value;
+                    form.elements[property].value = value;
+                    return true;
+                }
+            });
+            Array.from(form.elements).forEach( element => {
+                element.addEventListener("change", event => {
+                    this.#user[element.name] = element.value;
+                })
+            })
+        }
     }
   }
-  customElements.define("order-page", OrderPage);    
+  
+  customElements.define("order-page", OrderPage);

@@ -22,3 +22,5 @@ export class CartItem extends HTMLElement {
         })
       }
 }
+
+customElements.define("cart-item", CartItem);
